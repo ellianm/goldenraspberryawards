@@ -1,10 +1,14 @@
 package br.com.goldenraspberryawards.api.model;
 
-public interface ProducerInterval {
+import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Data;
 
-    Long getId();
-    String getName();
-    Integer getFirstYear();
-    Integer getLastYear();
-    Integer getYearsInterval();
+@Data
+public class ProducerInterval {
+    Long id;
+    String producer;
+    Integer previousWin;
+    Integer followingWin;
+    @JsonProperty("interval")
+    Integer yearsInterval;
 }

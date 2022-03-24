@@ -1,6 +1,8 @@
 package br.com.goldenraspberryawards.domain.service;
 
 import br.com.goldenraspberryawards.api.model.ProducerInterval;
+import br.com.goldenraspberryawards.api.model.ProducerIntervalQuery;
+import br.com.goldenraspberryawards.api.model.ProducerIntervalReturn;
 import br.com.goldenraspberryawards.domain.model.Producer;
 import br.com.goldenraspberryawards.domain.repository.ProducerRepository;
 import org.modelmapper.ModelMapper;
@@ -11,8 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -24,12 +24,25 @@ public class ProducerService {
     @Autowired
     ProducerRepository repository;
 
+    @Autowired
+    ModelMapper modelMapper;
 
-    public List<ProducerInterval> fasterAndSlowerProducerPrize() {
-        List<ProducerInterval> producerIntervalsQuery = repository.findSlowerAndFasterWinner();
-        List<ProducerInterval> producerIntervalsReturn = new ArrayList<>();
-        producerIntervalsReturn.add(producerIntervalsQuery.stream().min(Comparator.comparing(ProducerInterval::getYearsInterval)).get());
-        producerIntervalsReturn.add(producerIntervalsQuery.stream().max(Comparator.comparing(ProducerInterval::getYearsInterval)).get());
+
+    public ProducerIntervalReturn fasterAndSlowerProducerPrize() {
+        List<ProducerIntervalQuery> producerIntervalsQuery = repository.findSlowerAndFasterWinner();
+        ProducerIntervalReturn producerIntervalsReturn = new ProducerIntervalReturn();
+        producerIntervalsQuery.stream().filter(producerIntervalQuery -> producerIntervalQuery.getMax().equals("N"))
+                .forEach(producerIntervalQuery -> {
+                    ProducerInterval producerInterval = new ProducerInterval();
+                    modelMapper.map(producerIntervalQuery, producerInterval);
+                    producerIntervalsReturn.getMin().add(producerInterval);
+                });
+        producerIntervalsQuery.stream().filter(producerIntervalQuery -> producerIntervalQuery.getMax().equals("S"))
+                .forEach(producerIntervalQuery -> {
+                    ProducerInterval producerInterval = new ProducerInterval();
+                    modelMapper.map(producerIntervalQuery, producerInterval);
+                    producerIntervalsReturn.getMax().add(producerInterval);
+                });
         return producerIntervalsReturn;
     }
 

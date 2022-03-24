@@ -1,7 +1,7 @@
 package br.com.goldenraspberryawards.api.controller;
 
 import br.com.goldenraspberryawards.GoldenRaspBerryAwardsApplication;
-import br.com.goldenraspberryawards.api.model.ProducerInterval;
+import br.com.goldenraspberryawards.api.model.ProducerIntervalReturn;
 import br.com.goldenraspberryawards.domain.model.Producer;
 import br.com.goldenraspberryawards.domain.repository.ProducerRepository;
 import br.com.goldenraspberryawards.domain.service.ProducerService;
@@ -41,15 +41,15 @@ class ProducerControllerTest {
 
     @Test
     void fasterAndSlowerProducerPrize() {
-        List<ProducerInterval> producerIntervals = producerService.fasterAndSlowerProducerPrize();
-        Assert.isTrue(producerIntervals.get(0).getName().equals("Joel Silver"));
-        Assert.isTrue(producerIntervals.get(0).getYearsInterval() == 1);
-        Assert.isTrue(producerIntervals.get(0).getFirstYear() == 1990);
-        Assert.isTrue(producerIntervals.get(0).getLastYear() == 1991);
+        ProducerIntervalReturn producerIntervals = producerService.fasterAndSlowerProducerPrize();
+        Assert.isTrue(producerIntervals.getMin().get(0).getProducer().equals("Joel Silver"));
+        Assert.isTrue(producerIntervals.getMin().get(0).getYearsInterval() == 1);
+        Assert.isTrue(producerIntervals.getMin().get(0).getPreviousWin() == 1990);
+        Assert.isTrue(producerIntervals.getMin().get(0).getFollowingWin() == 1991);
 
-        Assert.isTrue(producerIntervals.get(1).getName().equals("Matthew Vaughn"));
-        Assert.isTrue(producerIntervals.get(1).getYearsInterval() == 13);
-        Assert.isTrue(producerIntervals.get(1).getFirstYear() == 2002);
-        Assert.isTrue(producerIntervals.get(1).getLastYear() == 2015);
+        Assert.isTrue(producerIntervals.getMax().get(0).getProducer().equals("Matthew Vaughn"));
+        Assert.isTrue(producerIntervals.getMax().get(0).getYearsInterval() == 13);
+        Assert.isTrue(producerIntervals.getMax().get(0).getPreviousWin() == 2002);
+        Assert.isTrue(producerIntervals.getMax().get(0).getFollowingWin() == 2015);
     }
 }

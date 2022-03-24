@@ -1,12 +1,11 @@
 package br.com.goldenraspberryawards.api.controller;
 
 import br.com.goldenraspberryawards.api.model.ProducerDTO;
-import br.com.goldenraspberryawards.api.model.ProducerInterval;
+import br.com.goldenraspberryawards.api.model.ProducerIntervalReturn;
 import br.com.goldenraspberryawards.domain.model.Producer;
 import br.com.goldenraspberryawards.domain.repository.ProducerRepository;
 import br.com.goldenraspberryawards.domain.service.ProducerService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,7 +60,7 @@ public class ProducerController {
     }
 
     @GetMapping("/fasterAndSlower")
-    public List<ProducerInterval> fasterAndSlowerProducerPrize() {
+    public ProducerIntervalReturn fasterAndSlowerProducerPrize() {
         return this.service.fasterAndSlowerProducerPrize();
     }
 
